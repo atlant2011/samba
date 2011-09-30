@@ -23,6 +23,7 @@
 		<arg choice="opt">-b</arg>
 		<arg choice="opt">-D</arg>
 		<arg choice="opt">-S</arg>
+		<arg choice="opt">-F</arg>
 	</cmdsynopsis>
 </refsynopsisdiv>
 
@@ -64,6 +65,15 @@
 		<listitem><para>Only print a list of 
 		all the domains and servers responding on broadcast or 
 		known by the master browser. 
+		</para></listitem>
+		</varlistentry>
+
+		<varlistentry>
+		<term>-F|--fusesmb</term>
+		<listitem><para>Only print a list of 
+		all the domains and servers responding on broadcast or 
+		known by the master browser in the format "fusesmb.cache"
+		"/(domain|workgroup)/comp/share".
 		</para></listitem>
 		</varlistentry>
 
