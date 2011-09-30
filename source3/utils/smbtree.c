@@ -247,9 +247,7 @@ static bool print_tree(struct user_auth_info *user_info)
 
         for (wg = workgroups; wg; wg = wg->next) {
 
-                if (level == LEV_LISTSHARE)
-                    printf("/%s", wg->name);
-                else
+                if (level != LEV_LISTSHARE)
                     printf("%s\n", wg->name)
 
                 /* List servers */
@@ -263,9 +261,7 @@ static bool print_tree(struct user_auth_info *user_info)
 
                 for (sv = servers; sv; sv = sv->next) {
 
-                        if (level == LEV_LISTSHARE)
-                            printf("/%s", sv->name);
-                        else
+                        if (level != LEV_LISTSHARE)
                             printf("\t\\\\%-15s\t\t%s\n",
                                   sv->name, sv->comment);
 
@@ -280,7 +276,7 @@ static bool print_tree(struct user_auth_info *user_info)
 
                         for (sh = shares; sh; sh = sh->next) {
                             if (level == LEV_LISTSHARE)
-                                printf("/%s", sh->name);
+                                printf("/%s/%s/%s\n", wg->name, sv->name, sh->name);
                             else
                                 printf("\t\t\\\\%s\\%-15s\t%s\n", 
 				       sv->name, sh->name, sh->comment);
