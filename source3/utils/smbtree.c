@@ -30,7 +30,7 @@ static int use_bcast;
 
 /* How low can we go? */
 
-enum tree_level {LEV_WORKGROUP, LEV_SERVER, LEV_SHARE};
+enum tree_level {LEV_WORKGROUP, LEV_SERVER, LEV_SHARE, LEV_LISTSHARE};
 static enum tree_level level = LEV_SHARE;
 
 /* Holds a list of workgroups or servers */
@@ -247,7 +247,10 @@ static bool print_tree(struct user_auth_info *user_info)
 
         for (wg = workgroups; wg; wg = wg->next) {
 
-                printf("%s\n", wg->name);
+                if (level == LEV_LISTSHARE)
+                    printf("/%s", wg->name);
+                else
+                    printf("%s\n", wg->name)
 
                 /* List servers */
 
@@ -260,8 +263,11 @@ static bool print_tree(struct user_auth_info *user_info)
 
                 for (sv = servers; sv; sv = sv->next) {
 
-                        printf("\t\\\\%-15s\t\t%s\n", 
-			       sv->name, sv->comment);
+                        if (level == LEV_LISTSHARE)
+                            printf("/%s", sv->name);
+                        else
+                            printf("\t\\\\%-15s\t\t%s\n",
+                                  sv->name, sv->comment);
 
                         /* List shares */
 
@@ -273,6 +279,9 @@ static bool print_tree(struct user_auth_info *user_info)
                                 continue;
 
                         for (sh = shares; sh; sh = sh->next) {
+                            if (level == LEV_LISTSHARE)
+                                printf("/%s", sh->name);
+                            else
                                 printf("\t\t\\\\%s\\%-15s\t%s\n", 
 				       sv->name, sh->name, sh->comment);
                         }
@@ -294,6 +303,7 @@ static bool print_tree(struct user_auth_info *user_info)
 		{ "broadcast", 'b', POPT_ARG_VAL, &use_bcast, True, "Use broadcast instead of using the master browser" },
 		{ "domains", 'D', POPT_ARG_VAL, &level, LEV_WORKGROUP, "List only domains (workgroups) of tree" },
 		{ "servers", 'S', POPT_ARG_VAL, &level, LEV_SERVER, "List domains(workgroups) and servers of tree" },
+                { "fusesmb", 'F', POPT_ARG_VAL, &level, LEV_LISTSHARE, "List /(domains|workgroups)/server/share {for fusesmb}" },
 		POPT_COMMON_SAMBA
 		POPT_COMMON_CREDENTIALS
 		POPT_TABLEEND
